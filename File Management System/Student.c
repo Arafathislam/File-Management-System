@@ -1,11 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<windows.h>
-struct date{int month,day,year;};
-struct {int id,age,batch; char name[10]; char dept[12]; double phone; struct date dob; struct date aob;}Ad,Up,Rm,check;
-int i,j,main_exit;
+struct {int id,age,phn,fee,session;char fname[10],lname[10],dept[12],batch[8],date[14];}Ad,Up,Rm,check,Tr; // collection
+int i,j,main_exit; // global variable
 COORD coord ={0,0};
-void Loading(int j);
+void Loading(int j); // timing
 void close(void);
 void menu(void);
 void add();
@@ -13,17 +12,21 @@ void view();
 void del(void);
 void find(void);
 void up_info(void);
+void trans(void);
 void gotoxy(int x,int y);
+                                                    /* Main function */
 int main(){
-    char pass[10],ch,password[10]="arafath";
+    char pass[10],ch,password[10]="arafath"; // Password
     system("cls");
     system("color 6");
+    gotoxy(50,1);
+    printf("%s",__TIME__); // real time
     gotoxy(40,3);
     printf("\xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2 WELCOME \xB2\xB2\xB2\xB2\xB2\xB2\xB2\xB2");
     gotoxy(40,5);
     printf("Enter Password:");
-   // scanf("%s",&pass);
-        while(ch!=13)
+        scanf("%s",&pass);
+        /*while(ch!=13)
         {
         ch=getch();
 
@@ -32,7 +35,7 @@ int main(){
         pass[i] = ch;
         i++;
         }
-    }
+    }*/
     if(strcmp(pass,password)==0){
         gotoxy(40,7);
        printf("Password Match\n");
@@ -67,12 +70,14 @@ int main(){
 
     return 0;
 }
+                                            /* Timing Function*/
 void Loading(int j){
 int i,k;
 for(i=0;i<j;i++){
     k=i;
 }
 }
+                                                    /* Closing Function*/
 void close(void){
     char a[20]=" Thank You ";
     gotoxy(30,7);
@@ -90,6 +95,7 @@ void close(void){
     }
     getch();
 }
+                                                            /*Menu Function*/
 void menu(void){
     int choice ;
     system("cls");
@@ -120,6 +126,8 @@ void menu(void){
     gotoxy(40,14);
     printf("[5].View All Information");
     gotoxy(40,16);
+    printf("[6].Transaction");
+    gotoxy(40,18);
     printf("Enter:");
     scanf("%d",&choice);
     system("cls");
@@ -133,6 +141,8 @@ void menu(void){
         case 4:up_info();
         break;
         case 5:view();
+        break;
+        case 6:trans();
         break;
         default:{
             gotoxy(40,4);
@@ -155,51 +165,66 @@ void menu(void){
 
 
 }
+                                                            /*Adding Function*/
 void add(){
     int choice;
     FILE *AR;
-    AR=fopen("record.dat","a+");
+    AR=fopen("record.txt","a+");
     id_no:
         system("cls");
     gotoxy(40,2);
     printf("\xB2\xB2\xB2 ADD INFORMATION \xB2\xB2\xB2");
-    gotoxy(20,5);
-    printf("Enter Todays date(mm/dd/yy):");
-    scanf("%d/%d/%d",&Ad.aob.month,&Ad.aob.day,&Ad.aob.year);
     gotoxy(20,7);
     printf("Enter ID:");
     scanf("%d",&check.id);
-    while(fscanf(AR,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",&Ad.id,Ad.name,&Ad.aob.month,&Ad.aob.day,&Ad.aob.year,&Ad.batch,Ad.dept,&Ad.phone,&Ad.age,&Ad.dob.month,&Ad.dob.day,&Ad.dob.year)!=EOF){
+    while(fscanf(AR,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s",&Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,&Ad.age,&Ad.phn,&Ad.session,&Ad.fee,Ad.date)!=EOF){
           if(check.id==Ad.id){
+             gotoxy(40,5);
              printf("ID no is already use!");
-             Loading(100000);
+             Loading(100000000000);
              goto id_no;
           }
     }
     Ad.id=check.id;
     gotoxy(20,9);
     printf("Enter First Name:");
-    scanf("%s",Ad.name);
+    fflush(stdin);
+    gets(Ad.fname);
     gotoxy(20,11);
-    printf("Enter Batch:");
-    scanf("%d",&Ad.batch);
+    printf("Enter Last Name:");
+    fflush(stdin);
+    gets(Ad.lname);
     gotoxy(20,13);
-    printf("Enter Department:");
-    scanf("%s",Ad.dept);
+    printf("Enter your Dept:");
+    fflush(stdin);
+    gets(Ad.dept);
     gotoxy(20,15);
-    printf("Enter Phone number:+880-");
-    scanf("%lf",&Ad.phone);
+    printf("Enter your Batch:");
+    fflush(stdin);
+    gets(Ad.batch);
     gotoxy(20,17);
-    printf("Enter date of birth(mm/dd/yy):");
-    scanf("%d/%d/%d",&Ad.dob.month,&Ad.dob.day,&Ad.dob.year);
-    gotoxy(20,19);
-    printf("Enter Age:");
+    printf("Enter your age:");
+    fflush(stdin);
     scanf("%d",&Ad.age);
-    fprintf(AR,"%d %s %d/%d/%d %d %s %lf %d  %d/%d/%d\n",Ad.id,Ad.name,Ad.aob.month,Ad.aob.day,Ad.aob.year,Ad.batch,Ad.dept,Ad.phone,Ad.age,Ad.dob.month,Ad.dob.day,Ad.dob.year);
-    fclose(AR);
+    gotoxy(20,19);
+    printf("Enter your number:+880 - ");
+    fflush(stdin);
+    scanf("%d",&Ad.phn);
     gotoxy(20,21);
-    printf("Account created successfully");
+    printf("Enter your session:");
+    fflush(stdin);
+    scanf("%d",&Ad.session);
     gotoxy(20,23);
+    printf("Enter Date(dd-mm-yy):");
+    fflush(stdin);
+    gets(Ad.date);
+
+    Ad.fee=0;
+    fprintf(AR,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,Ad.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
+    fclose(AR);
+    gotoxy(20,27);
+    printf("Account created successfully");
+    gotoxy(20,29);
     printf("Enter 1 to the Main menu and any other key to Exit:");
     scanf("%d",&main_exit);
     system("cls");
@@ -210,21 +235,22 @@ void add(){
         close();
     }
 }
-
+                                /* Showing All Data */
 void view(){
     FILE *show;
-    show=fopen("record.dat","r");
+    show=fopen("record.txt","r");
     int test=0;
     system("cls");
     gotoxy(40,2);
     printf("\xB2\xB2\xB2 ALL LIST \xB2\xB2\xB2\n\n\n");
-    while(fscanf(show,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",&Ad.id,Ad.name,&Ad.aob.month,&Ad.aob.day,&Ad.aob.year,&Ad.batch,Ad.dept,&Ad.phone,&Ad.age,&Ad.dob.month,&Ad.dob.day,&Ad.dob.year)!=EOF){
-    printf("Id:%d\t\tName:%s\t\tBatch:%d\t\tDepartment:%s\n",Ad.id,Ad.name,Ad.batch,Ad.dept);
+    while(fscanf(show,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s",&Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,&Ad.age,&Ad.phn,&Ad.session,&Ad.fee,Ad.date)!=EOF){
+    printf("Id:%d\t\Name:%s %s\t\tBatch:%s\t\tDepartment:%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept);
     test++;
    }
     fclose(show);
      if(test==0){
         system("cls");
+        gotoxy(40,5);
         printf("NO Records!\n");
     }
     printf("\n\nEnter 1 to mainmenu and any other key to exit");
@@ -237,19 +263,20 @@ void view(){
         close();
     }
 }
+                                            /*Deleting Function*/
 void del(void){
     FILE *old,*newrec;
     int test=0;
-    old = fopen("record.dat","r");
-    newrec=fopen("new.dat","w");
+    old = fopen("record.txt","r");
+    newrec=fopen("new.txt","w");
     gotoxy(40,3);
     printf("\xB2\xB2\xB2 DELETE RECORD \xB2\xB2\xB2");
     gotoxy(20,7);
-    printf("Enter Your Account No:");
+    printf("Enter Your ID No:");
     scanf("%d",&Rm.id);
-    while(fscanf(old,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",&Ad.id,Ad.name,&Ad.aob.month,&Ad.aob.day,&Ad.aob.year,&Ad.batch,Ad.dept,&Ad.phone,&Ad.age,&Ad.dob.month,&Ad.dob.day,&Ad.dob.year)!=EOF){
+    while(fscanf(old,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s",&Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,&Ad.age,&Ad.phn,&Ad.session,&Ad.fee,Ad.date)!=EOF){
         if(Ad.id!=Rm.id){
-               fprintf(newrec,"%d %s %d/%d/%d  %d %s %lf  %d %d/%d/%d\n",Ad.id,Ad.name,Ad.aob.month,Ad.aob.day,Ad.aob.year,Ad.batch,Ad.dept,Ad.phone,Ad.age,Ad.dob.month,Ad.dob.day,Ad.dob.year);
+               fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,Ad.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
 
         }
         else{
@@ -261,13 +288,14 @@ void del(void){
     }
         fclose(old);
         fclose(newrec);
-        remove("record.dat");
-        rename("new.dat","record.dat");
+        remove("record.txt");
+        rename("new.txt","record.txt");
         if(test==0){
+            system("cls");
             gotoxy(20,7);
             printf("Record not found!");
             gotoxy(20,9);
-            printf("Enter 1 to try agian ,0 to main menu And any other key to exit:");
+            printf("Enter 1 to try again ,0 to main menu And any other key to exit:");
             scanf("%d",&main_exit);
             if(main_exit==1)
                 del();
@@ -286,26 +314,17 @@ void del(void){
                 close();
         }
 }
+                                                /*Finding Fucntion*/
 void find(void){
     FILE*AR;
     int test=0,choice;
-    AR=fopen("record.dat","r");
+    AR=fopen("record.txt","r");
     gotoxy(40,3);
     printf("\xB2\xB2\xB2 FIND INFORMATION \xB2\xB2\xB2");
     gotoxy(30,7);
-    printf("Do you want to chek by");
-    gotoxy(30,9);
-    printf("[1].ID");
-    gotoxy(30,11);
-    printf("[2].NAME");
-    gotoxy(30,13);
-    printf("Enter:");
-    scanf("%d",&choice);
-    if(choice==1){
-        gotoxy(30,15);
-        printf("Enter id No:");
-        scanf("%d",&check.id);
-        while(fscanf(AR,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",&Ad.id,Ad.name,&Ad.aob.month,&Ad.aob.day,&Ad.aob.year,&Ad.batch,Ad.dept,&Ad.phone,&Ad.age,&Ad.dob.month,&Ad.dob.day,&Ad.dob.year)!=EOF){
+    printf("Enter id No:");
+    scanf("%d",&check.id);
+        while(fscanf(AR,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s",&Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,&Ad.age,&Ad.phn,&Ad.session,&Ad.fee,Ad.date)!=EOF){
             if(check.id==Ad.id){
                 system("cls");
                 test=1;
@@ -314,51 +333,24 @@ void find(void){
                 gotoxy(30,5);
                 printf("ID: %d",Ad.id);
                 gotoxy(30,7);
-                printf("Name: %s",Ad.name);
+                printf("Name: %s %s",Ad.fname,Ad.lname);
                 gotoxy(30,9);
-                printf("Admitted Date: %d/%d/%d",Ad.aob.month,Ad.aob.day,Ad.aob.year);
+                printf("Session:%d",Ad.session);
                 gotoxy(30,11);
-                printf("Batch: %d",Ad.batch);
+                printf("Batch: %s",Ad.batch);
                 gotoxy(30,13);
                 printf("Department: %s",Ad.dept);
                 gotoxy(30,15);
-                printf("Phone: +880-%.0lf",Ad.phone);
+                printf("Phone: +880 - %d",Ad.phn);
                 gotoxy(30,17);
                 printf("Age: %d",Ad.age);
                 gotoxy(30,19);
-                printf("Birth Date: %d/%d/%d",Ad.dob.month,Ad.dob.day,Ad.dob.year);
+                printf("Total paid: %d",Ad.fee);
+                gotoxy(30,21);
+                printf(" Cardite Completed:%d",Ad.fee/1500);
+                gotoxy(30,23);
+                printf("Admitted Date:%s",Ad.date);
             }
-        }
-    }
-    else if(choice==2){
-        gotoxy(30,15);
-        printf("Enter Name:");
-        scanf("%s",&check.name);
-         while(fscanf(AR,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",&Ad.id,Ad.name,&Ad.aob.month,&Ad.aob.day,&Ad.aob.year,&Ad.batch,Ad.dept,&Ad.phone,&Ad.age,&Ad.dob.month,&Ad.dob.day,&Ad.dob.year)!=EOF){
-            if(strcmpi(Ad.name,check.name)==0){
-                system("cls");
-                test=1;
-                gotoxy(40,2);
-                printf("\xB2\xB2\xB2 INFORMATION \xB2\xB2\xB2");
-                gotoxy(30,5);
-                printf("ID: %d",Ad.id);
-                gotoxy(30,7);
-                printf("Name: %s",Ad.name);
-                gotoxy(30,9);
-                printf("Admitted Date: %d/%d/%d",Ad.aob.month,Ad.aob.day,Ad.aob.year);
-                gotoxy(30,11);
-                printf("Batch: %d",Ad.batch);
-                gotoxy(30,13);
-                printf("Department: %s",Ad.dept);
-                gotoxy(30,15);
-                printf("Phone: +880-%.0lf",Ad.phone);
-                gotoxy(30,17);
-                printf("Age: %d",Ad.age);
-                gotoxy(30,19);
-                printf("Birth Date: %d/%d/%d",Ad.dob.month,Ad.dob.day,Ad.dob.year);
-            }
-        }
-
         }
         fclose(AR);
          if(test!=1)
@@ -379,12 +371,13 @@ void find(void){
                 else
                     {
                         system("cls");
+                        gotoxy(30,8);
                         printf("\nInvalid!\a");
                         goto see_invalid;}
         }
     else
         {
-           gotoxy(30,21);
+           gotoxy(30,25);
             printf("Enter 1 to go to the main menu and 0 to exit:");
         scanf("%d",&main_exit);}
         if (main_exit==1)
@@ -397,48 +390,93 @@ void find(void){
            {
 
              system("cls");
-            close();
+             close();
             }
 
 }
+                                            /*Updating Function*/
 void up_info(void){
         int choice,test=0;
         FILE *old,*newrec;
-        old=fopen("record.dat","r");
-        newrec=fopen("new.dat","w");
+        old=fopen("record.txt","r");
+        newrec=fopen("new.txt","w");
+        gotoxy(40,1);
+        printf("\xB2\xB2\xB2 Update INFORMATION \xB2\xB2\xB2");
+        gotoxy(30,5);
         printf("Enter id:");
         scanf("%d",&Up.id);
-        while(fscanf(old,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",&Ad.id,Ad.name,&Ad.aob.month,&Ad.aob.day,&Ad.aob.year,&Ad.batch,Ad.dept,&Ad.phone,&Ad.age,&Ad.dob.month,&Ad.dob.day,&Ad.dob.year)!=EOF){
+        while(fscanf(old,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s",&Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,&Ad.age,&Ad.phn,&Ad.session,&Ad.fee,Ad.date)!=EOF){
             if(Ad.id==Up.id){
                 test=1;
-                printf("Which information do you want to change:\n[1]Age\n[2].Phone\nEnter:");
+                system("cls");
+                push_invalid:
+                gotoxy(40,3);
+                printf("\xB2\xB2\xB2 Update INFORMATION \xB2\xB2\xB2");
+                gotoxy(30,5);
+                printf("[1].Age");
+                gotoxy(30,7);
+                printf("[2].Phone");
+                gotoxy(30,9);
+                printf("[3].Batch");
+                gotoxy(30,11);
+                printf("[4].Department");
+                gotoxy(30,13);
+                printf("Enter:");
                 scanf("%d",&choice);
                 system("cls");
                 if(choice==1){
-                    printf("Enter New Age:\n");
+                    printf("Enter New Age: ");
                     scanf("%d",&Up.age);
-                    fprintf(newrec,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",Ad.id,Ad.name,Ad.aob.month,Ad.aob.day,Ad.aob.year,Ad.batch,Ad.dept,Ad.phone,Up.age,Ad.dob.month,Ad.dob.day,Ad.dob.year);
+                    fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,Up.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
                     system("cls");
+                    gotoxy(30,2);
                     printf("Change save!");
                 }
                 else if(choice==2){
-                    printf("Enter New Phone No:\n");
-                    scanf("%lf",&Up.phone);
-                    fprintf(newrec,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",Ad.id,Ad.name,Ad.aob.month,Ad.aob.day,Ad.aob.year,Ad.batch,Ad.dept,Up.phone,Ad.age,Ad.dob.month,Ad.dob.day,Ad.dob.year);
+                    printf("Enter New Phone No:+880 - ");
+                    scanf("%d",&Up.phn);
+                    fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,Ad.age,Up.phn,Ad.session,Ad.fee,Ad.date);
                     system("cls");
+                    gotoxy(30,2);
                     printf("Change save!");
+                }
+                  else if(choice==3){
+                    printf("Enter New Batch: ");
+                    fflush(stdin);
+                    gets(Up.batch);
+                    fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Up.batch,Ad.dept,Ad.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
+                    system("cls");
+                    gotoxy(30,2);
+                    printf("Change save!");
+                }
+                  else if(choice==4){
+                    printf("Enter New Department: ");
+                    fflush(stdin);
+                    gets(Up.dept);
+                    Ad.fee=0;
+                    fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Up.dept,Ad.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
+                    system("cls");
+                    gotoxy(30,2);
+                    printf("Change save!");
+                }
+                else{
+                    gotoxy(40,1);
+                    printf("Invalid Please try again!");
+                    goto push_invalid;
+
                 }
             }
                 else
-                    fprintf(newrec,"%d %s %d/%d/%d %d %s %lf %d %d/%d/%d\n",Ad.id,Ad.name,Ad.aob.month,Ad.aob.day,Ad.aob.year,Ad.batch,Ad.dept,Ad.phone,Ad.age,Ad.dob.month,Ad.dob.day,Ad.dob.year);
+                    fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,Ad.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
 
         }
         fclose(old);
         fclose(newrec);
-        remove("record.dat");
-        rename("new.dat","record.dat");
+        remove("record.txt");
+        rename("new.txt","record.txt");
         if(test!=1){
-            printf("Enter 1 to try again or 0 to mainmenu and any other key to exit:");
+            gotoxy(30,8);
+            printf("Enter 1 to try again or 0 to main menu and any other key to exit:");
             scanf("%d",&main_exit);
             system("cls");
             if(main_exit==1)
@@ -449,7 +487,8 @@ void up_info(void){
                 close();
         }
         else{
-            printf("\n\nEnter 1 to menu And any other key to exit:");
+            gotoxy(30,4);
+            printf("Enter 1 to menu And any other key to exit:");
             scanf("%d",&main_exit);
             system("cls");
             if(main_exit==1)
@@ -458,9 +497,74 @@ void up_info(void){
                 close();
         }
 }
+                                                /* Transaction Function*/
+void trans(void){
+        FILE *old,*newrec;
+        int test=0;
+        old=fopen("record.txt","r");
+        newrec=fopen("new.txt","w");
+        gotoxy(40,2);
+        printf("\xB2\xB2\xB2 Transcation INFORMATION \xB2\xB2\xB2");
+        gotoxy(30,4);
+        printf("Enter your ID:");
+        scanf("%d",&Tr.id);
+        while(fscanf(old,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s",&Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,&Ad.age,&Ad.phn,&Ad.session,&Ad.fee,Ad.date)!=EOF){
+            if(Tr.id==Ad.id){
+                test=1;
+                try_again:
+                gotoxy(30,6);
+                printf("Enter your cardite:");
+                scanf("%d",&Tr.fee);
+                if(Tr.fee<=15){
+                   Ad.fee+=Tr.fee*1500;
+                }else{
+                    system("cls");
+                    gotoxy(30,2);
+                    printf("You cannot carry more then 15 cardite!");
+                    goto try_again;
+                }
+
+
+            fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,Ad.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
+            gotoxy(30,8);
+            printf("%d ID fee paid successfully",Ad.id);
+
+            } else
+                    fprintf(newrec,"%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%s\n",Ad.id,Ad.fname,Ad.lname,Ad.batch,Ad.dept,Ad.age,Ad.phn,Ad.session,Ad.fee,Ad.date);
+
+        }
+        fclose(old);
+        fclose(newrec);
+        remove("record.txt");
+        rename("new.txt","record.txt");
+        if(test!=1){
+            gotoxy(30,6);
+            printf("ID not found!!!Enter 1 to try again or 0 to main menu and any other key to exit:");
+            scanf("%d",&main_exit);
+            system("cls");
+            if(main_exit==1)
+                up_info();
+            else if(main_exit==0)
+                menu();
+            else
+                close();
+        }
+        else{
+            gotoxy(30,10);
+            printf("Enter 1 to menu And any other key to exit:");
+            scanf("%d",&main_exit);
+            system("cls");
+            if(main_exit==1)
+                menu();
+            else
+                close();
+        }
+}
+                                                    /*Cursor at a Desired location on screen Function*/
 void gotoxy(int x,int y){
 coord.X=x;
 coord.Y=y;
 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),coord);
 }
+
 
